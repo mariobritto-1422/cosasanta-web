@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://cosasanta.com/sitemap.xml
