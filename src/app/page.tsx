@@ -459,9 +459,6 @@ export default function Home() {
             >
               💬 WhatsApp directo
             </a>
-            <a href={`mailto:${EMAIL}`} className="btn-secondary">
-              ✉ Enviar email
-            </a>
           </div>
           <p style={{ marginTop: "24px", fontSize: "13px", color: "var(--muted)" }}>
             Respondemos en menos de 24hs · Argentina & Latam
