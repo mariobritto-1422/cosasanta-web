@@ -252,13 +252,71 @@ export default function AgenteContenido() {
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef  = useRef<HTMLInputElement>(null);
 
+  // Monetización
+  const [userEmail, setUserEmail]         = useState("");
+  const [userEstado, setUserEstado]       = useState<"idle"|"checking"|"trial"|"pro"|"expired">("idle");
+  const [diasRestantes, setDiasRestantes] = useState<number>(7);
+  const [emailInput, setEmailInput]       = useState("");
+  const [loadingPago, setLoadingPago]     = useState(false);
+  const botStartedRef                     = useRef(false);
+
   const scroll = () =>
     setTimeout(() => bottomRef.current?.scrollIntoView({ behavior: "smooth" }), 80);
 
+  const verificarUsuario = async (email: string) => {
+    setUserEstado("checking");
+    try {
+      const res = await fetch("/api/autopost/usuario", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      const data = await res.json();
+      setUserEmail(email);
+      setUserEstado(data.estado);
+      if (data.diasRestantes) setDiasRestantes(data.diasRestantes);
+    } catch {
+      setUserEstado("trial"); // fallback permisivo
+    }
+  };
+
+  const iniciarPago = async () => {
+    setLoadingPago(true);
+    try {
+      const res = await fetch("/api/autopost/suscripcion", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: userEmail }),
+      });
+      const data = await res.json();
+      if (data.init_point) {
+        window.location.href = data.init_point;
+      }
+    } catch {
+      setLoadingPago(false);
+    }
+  };
+
+  // Detectar retorno de MercadoPago (?pago=exitoso)
   useEffect(() => {
-    setTimeout(() => addBotMsg(STEPS[0].bot as string), 600);
+    const params = new URLSearchParams(window.location.search);
+    const pago = params.get("pago");
+    const emailParam = params.get("email");
+    if (pago === "exitoso" && emailParam) {
+      verificarUsuario(emailParam);
+      window.history.replaceState({}, "", "/autopost");
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Arrancar bot cuando el usuario está verificado
+  useEffect(() => {
+    if ((userEstado === "trial" || userEstado === "pro") && !botStartedRef.current) {
+      botStartedRef.current = true;
+      setTimeout(() => addBotMsg(STEPS[0].bot as string), 600);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userEstado]);
 
   const addBotMsg = (text: string) => {
     setMessages((prev) => [...prev, { type: "bot", text, time: nowTime(), id: Date.now() + Math.random() }]);
@@ -360,6 +418,111 @@ export default function AgenteContenido() {
   const currentStep = STEPS[stepIdx];
   const postsFiltrados = calendario?.filter((p) => p.semana === semanaActiva) || [];
 
+  // Pantalla: pedir email
+  if (userEstado === "idle") {
+    return (
+      <div style={{ minHeight: "100vh", background: WA_BG, display: "flex",
+                    flexDirection: "column", alignItems: "center",
+                    justifyContent: "center", padding: "0 16px",
+                    fontFamily: "'Segoe UI', sans-serif" }}>
+        <div style={{ width: "100%", maxWidth: 420, background: "#1F2C34",
+                      borderRadius: 12, padding: "32px 28px" }}>
+          <div style={{ textAlign: "center", marginBottom: 24 }}>
+            <div style={{ fontSize: 40, marginBottom: 12 }}>🤖</div>
+            <h2 style={{ color: "#E9EDEF", fontSize: 20, fontWeight: 700,
+                         margin: "0 0 8px" }}>AutoPost</h2>
+            <p style={{ color: "#8696A0", fontSize: 13, margin: 0 }}>
+              Ingresá tu email para empezar tu prueba gratuita de 7 días
+            </p>
+          </div>
+          <input
+            type="email"
+            placeholder="tu@email.com"
+            value={emailInput}
+            onChange={e => setEmailInput(e.target.value)}
+            onKeyDown={e => e.key === "Enter" && emailInput.includes("@") && verificarUsuario(emailInput)}
+            style={{ width: "100%", background: "#0B141A", border: "1px solid rgba(255,255,255,0.1)",
+                     borderRadius: 8, padding: "12px 16px", color: "#E9EDEF",
+                     fontSize: 14, outline: "none", marginBottom: 12,
+                     boxSizing: "border-box" as const }}
+          />
+          <button
+            onClick={() => verificarUsuario(emailInput)}
+            disabled={!emailInput.includes("@")}
+            style={{ width: "100%",
+                     background: emailInput.includes("@") ? "#F07428" : "rgba(255,255,255,0.1)",
+                     border: "none", borderRadius: 8, padding: "13px",
+                     color: "#fff", fontSize: 14, fontWeight: 600,
+                     cursor: emailInput.includes("@") ? "pointer" : "default" }}>
+            Empezar prueba gratuita →
+          </button>
+          <p style={{ color: "rgba(255,255,255,0.2)", fontSize: 10,
+                      textAlign: "center", marginTop: 12, letterSpacing: 1 }}>
+            7 días gratis · Sin tarjeta · Sin compromiso
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // Pantalla: verificando
+  if (userEstado === "checking") {
+    return (
+      <div style={{ minHeight: "100vh", background: WA_BG, display: "flex",
+                    alignItems: "center", justifyContent: "center" }}>
+        <div style={{ color: "#8696A0", fontSize: 14 }}>Verificando tu cuenta...</div>
+      </div>
+    );
+  }
+
+  // Pantalla: trial expirado → pago
+  if (userEstado === "expired") {
+    return (
+      <div style={{ minHeight: "100vh", background: WA_BG, display: "flex",
+                    flexDirection: "column", alignItems: "center",
+                    justifyContent: "center", padding: "0 16px",
+                    fontFamily: "'Segoe UI', sans-serif" }}>
+        <div style={{ width: "100%", maxWidth: 420, background: "#1F2C34",
+                      borderRadius: 12, padding: "32px 28px", textAlign: "center" }}>
+          <div style={{ fontSize: 40, marginBottom: 16 }}>⏰</div>
+          <h2 style={{ color: "#E9EDEF", fontSize: 20, fontWeight: 700, margin: "0 0 8px" }}>
+            Tu prueba gratuita terminó
+          </h2>
+          <p style={{ color: "#8696A0", fontSize: 13, margin: "0 0 24px", lineHeight: 1.6 }}>
+            Activá AutoPost Pro y seguí generando contenido todos los meses.
+          </p>
+          <div style={{ background: "rgba(240,116,40,0.1)", border: "1px solid rgba(240,116,40,0.3)",
+                        borderRadius: 10, padding: "20px", marginBottom: 24 }}>
+            <div style={{ fontSize: 32, fontWeight: 800, color: "#F07428" }}>USD 29</div>
+            <div style={{ color: "#8696A0", fontSize: 12, marginTop: 4 }}>/mes · Cancelá cuando quieras</div>
+            <div style={{ marginTop: 16, textAlign: "left" }}>
+              {["✅ 12 posts/mes generados con IA",
+                "✅ Personalizado para tu negocio",
+                "✅ Instagram + Facebook + LinkedIn",
+                "✅ Textos + hashtags + calendario",
+                "✅ Soporte por WhatsApp"].map(item => (
+                <div key={item} style={{ color: "#E9EDEF", fontSize: 12, marginBottom: 6 }}>{item}</div>
+              ))}
+            </div>
+          </div>
+          <button
+            onClick={iniciarPago}
+            disabled={loadingPago}
+            style={{ width: "100%", background: "linear-gradient(135deg, #F07428, #D06010)",
+                     border: "none", borderRadius: 8, padding: "14px",
+                     color: "#fff", fontSize: 14, fontWeight: 700,
+                     cursor: loadingPago ? "default" : "pointer" }}>
+            {loadingPago ? "Redirigiendo a MercadoPago..." : "Activar AutoPost Pro →"}
+          </button>
+          <p style={{ color: "rgba(255,255,255,0.2)", fontSize: 10,
+                      textAlign: "center", marginTop: 12 }}>
+            Powered by MercadoPago · Pago 100% seguro
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div style={{
       minHeight: "100vh",
@@ -389,6 +552,11 @@ export default function AgenteContenido() {
           <div style={{ flex: 1 }}>
             <div style={{ fontSize: 15, fontWeight: 600, color: WA_TEXT }}>AutoPost</div>
             <div style={{ fontSize: 11, color: WA_GREEN }}>cosa$anta · en línea</div>
+            {userEstado === "trial" && (
+              <div style={{ fontSize: 9, color: ORANGE, letterSpacing: 1 }}>
+                {diasRestantes} día{diasRestantes !== 1 ? "s" : ""} de prueba restantes
+              </div>
+            )}
           </div>
         </div>
 
