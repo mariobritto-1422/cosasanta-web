@@ -88,6 +88,18 @@ nav ul a:hover { color: var(--text); }
 
 .nav-cta:hover { opacity: 0.85; color: #0a0a0a !important; }
 
+.nav-autopost {
+  background: #F07428 !important;
+  color: #fff !important;
+  padding: 6px 16px;
+  border-radius: 100px;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  transition: opacity 0.2s !important;
+}
+
+.nav-autopost:hover { opacity: 0.85; color: #fff !important; }
+
 /* HERO */
 .hero {
   min-height: 100vh;

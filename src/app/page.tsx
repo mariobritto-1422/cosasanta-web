@@ -109,6 +109,7 @@ export default function Home() {
           <li><a href="#proyectos">Proyectos</a></li>
           <li><a href="#proceso">Proceso</a></li>
           <li><a href="#blog">Blog</a></li>
+          <li><a href="/autopost" className="nav-autopost">AutoPost ✨</a></li>
           <li><a href="#contacto" className="nav-cta">Hablemos →</a></li>
         </ul>
       </nav>
