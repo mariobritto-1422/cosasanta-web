@@ -28,6 +28,47 @@ export const metadata: Metadata = {
   robots: "index, follow",
 };
 
+const organizationSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Cosa Santa",
+  "url": "https://cosasanta.com",
+  "description": "Agencia de automatización con IA, desarrollo web y marketing digital para empresas de Argentina y Latam.",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Posadas",
+    "addressRegion": "Misiones",
+    "addressCountry": "AR"
+  },
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "contactType": "customer service",
+    "availableLanguage": "Spanish",
+    "url": "https://wa.me/5492945415186"
+  },
+  "sameAs": [
+    "https://www.instagram.com/cosa_santa/",
+    "https://www.facebook.com/rollercomercial/",
+    "https://www.linkedin.com/in/colaboradormariobritto"
+  ]
+};
+
+const localBusinessSchema = {
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "name": "Cosa Santa",
+  "url": "https://cosasanta.com",
+  "description": "Páginas web, bots de WhatsApp con IA, sistemas de gestión y marketing digital para clínicas, consultorios, salones de belleza y empresas de Argentina.",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Posadas",
+    "addressRegion": "Misiones",
+    "addressCountry": "AR"
+  },
+  "areaServed": ["Buenos Aires", "Misiones", "Argentina", "Latam"],
+  "priceRange": "$"
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -35,6 +76,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}
+        />
+      </head>
       <GoogleTagManager gtmId="GTM-PTJ7RM9V" />
       <body className={`${plusJakarta.variable} ${dmSans.variable}`}>
         {children}

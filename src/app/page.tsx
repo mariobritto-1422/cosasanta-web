@@ -96,8 +96,59 @@ export default function Home() {
     return () => observer.disconnect();
   }, []);
 
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "¿Qué servicios ofrece Cosa Santa?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Cosa Santa ofrece desarrollo de páginas web, automatización con IA para WhatsApp, sistemas de gestión para clínicas y salones de belleza, marketing digital y merchandising empresarial para pymes y profesionales de Argentina y Latam."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Hacen bots de WhatsApp con inteligencia artificial en Argentina?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Sí. En Cosa Santa desarrollamos bots inteligentes para WhatsApp usando Claude AI, n8n y Evolution API. Automatizamos la atención al cliente 24/7 para consultorios, clínicas, salones de belleza y comercios de toda Argentina."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Trabajan con clientes de todo el país o solo de Misiones?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Trabajamos con clientes de Buenos Aires, Misiones y toda Argentina y Latam. Todos nuestros servicios son 100% remotos."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Cuánto cuesta una página web en Cosa Santa?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "El precio depende del proyecto. Desarrollamos desde landing pages simples hasta sistemas SaaS completos. Contactanos para una propuesta personalizada sin compromiso."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Qué es Topaciobot?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Topaciobot es un sistema de gestión para salones de belleza desarrollado por Cosa Santa. Incluye agenda visual, gestión de empleados, catálogo de servicios y dashboard de comisiones. Es una PWA instalable en cualquier dispositivo."
+        }
+      }
+    ]
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
       {/* NAV */}
       <nav>
         <a href="/" className="logo">
