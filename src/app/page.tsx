@@ -1,7 +1,5 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@supabase/supabase-js";
+import RevealObserver from "@/components/RevealObserver";
 
 interface BlogPost {
   id: string;
@@ -11,36 +9,6 @@ interface BlogPost {
   categoria: string;
   created_at: string;
 }
-
-const HARDCODED_POSTS = [
-  {
-    id: "1",
-    emoji: "📅",
-    categoria: "Salud Digital",
-    titulo: "Cómo automatizar los turnos de tu consultorio con WhatsApp en Argentina",
-    resumen: "Guía práctica para odontólogos, psicólogos y kinesiólogos que quieren reducir ausencias y ahorrar tiempo con recordatorios automáticos.",
-    fecha: "Mar 2026",
-    slug: null,
-  },
-  {
-    id: "2",
-    emoji: "💰",
-    categoria: "Diseño Web",
-    titulo: "Cuánto cuesta una página web profesional en Argentina en 2026",
-    resumen: "Precios reales, qué incluye cada plan y cómo elegir la mejor opción para tu negocio o consultorio.",
-    fecha: "Feb 2026",
-    slug: null,
-  },
-  {
-    id: "3",
-    emoji: "📣",
-    categoria: "Marketing Digital",
-    titulo: "Marketing digital para pymes en Misiones: por dónde empezar",
-    resumen: "Estrategias concretas para negocios locales que quieren aparecer en Google y atraer clientes sin gastar fortunas en publicidad.",
-    fecha: "Ene 2026",
-    slug: null,
-  },
-];
 
 const WA_NUMBER = "5492945415186";
 const WA_LINK = `https://wa.me/${WA_NUMBER}?text=Hola%20CosaSanta%2C%20quiero%20saber%20m%C3%A1s%20sobre%20sus%20servicios`;
@@ -62,39 +30,22 @@ function formatFecha(dateStr: string): string {
   return new Date(dateStr).toLocaleDateString("es-AR", { month: "short", year: "numeric" });
 }
 
-export default function Home() {
-  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
-
-  useEffect(() => {
-    supabase
+export default async function Home() {
+  let blogPosts: BlogPost[] = [];
+  try {
+    const { data } = await createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    )
       .from("blog_posts")
       .select("id, titulo, slug, resumen, categoria, created_at")
       .eq("publicado", true)
       .order("created_at", { ascending: false })
-      .limit(3)
-      .then(({ data }) => {
-        if (data && data.length > 0) setBlogPosts(data);
-      });
-  }, []);
-
-  useEffect(() => {
-    const reveals = document.querySelectorAll(".reveal");
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry, i) => {
-          if (entry.isIntersecting) {
-            setTimeout(() => {
-              entry.target.classList.add("visible");
-            }, i * 80);
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-    reveals.forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
-  }, []);
+      .limit(3);
+    blogPosts = data || [];
+  } catch {
+    // si Supabase falla, la sección queda vacía sin romper la home
+  }
 
   const faqSchema = {
     "@context": "https://schema.org",
@@ -145,6 +96,7 @@ export default function Home() {
 
   return (
     <>
+      <RevealObserver />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
@@ -435,41 +387,26 @@ export default function Home() {
           </a>
         </div>
         <div className="blog-grid reveal">
-          {blogPosts.length > 0
-            ? blogPosts.map((post) => (
-                <a
-                  key={post.id}
-                  href={`/blog/${post.slug}`}
-                  style={{ textDecoration: "none", color: "inherit" }}
-                >
-                  <div className="blog-card" style={{ cursor: "pointer", height: "100%" }}>
-                    <div className="blog-img">{EMOJI_MAP[post.categoria] || "📝"}</div>
-                    <div className="blog-body">
-                      <div className="blog-cat">{post.categoria}</div>
-                      <h3>{post.titulo}</h3>
-                      {post.resumen && <p>{post.resumen}</p>}
-                      <div className="blog-footer">
-                        <span>{formatFecha(post.created_at)}</span>
-                        <span>→ Leer</span>
-                      </div>
-                    </div>
-                  </div>
-                </a>
-              ))
-            : HARDCODED_POSTS.map((post) => (
-                <div key={post.id} className="blog-card">
-                  <div className="blog-img">{post.emoji}</div>
-                  <div className="blog-body">
-                    <div className="blog-cat">{post.categoria}</div>
-                    <h3>{post.titulo}</h3>
-                    <p>{post.resumen}</p>
-                    <div className="blog-footer">
-                      <span>{post.fecha}</span>
-                      <span>→ Leer</span>
-                    </div>
+          {blogPosts.map((post) => (
+            <a
+              key={post.id}
+              href={`/blog/${post.slug}`}
+              style={{ textDecoration: "none", color: "inherit" }}
+            >
+              <div className="blog-card" style={{ cursor: "pointer", height: "100%" }}>
+                <div className="blog-img">{EMOJI_MAP[post.categoria] || "📝"}</div>
+                <div className="blog-body">
+                  <div className="blog-cat">{post.categoria}</div>
+                  <h3>{post.titulo}</h3>
+                  {post.resumen && <p>{post.resumen}</p>}
+                  <div className="blog-footer">
+                    <span>{formatFecha(post.created_at)}</span>
+                    <span>→ Leer</span>
                   </div>
                 </div>
-              ))}
+              </div>
+            </a>
+          ))}
         </div>
       </section>
 
