@@ -388,7 +388,7 @@ export default function Home() {
             ? blogPosts.map((post) => (
                 <a
                   key={post.id}
-                  href={`/blog?post=${post.slug}`}
+                  href={`/blog/${post.slug}`}
                   style={{ textDecoration: "none", color: "inherit" }}
                 >
                   <div className="blog-card" style={{ cursor: "pointer", height: "100%" }}>
