@@ -49,7 +49,7 @@ const organizationSchema = {
   "sameAs": [
     "https://www.instagram.com/cosa_santa/",
     "https://www.facebook.com/rollercomercial/",
-    "https://www.linkedin.com/in/colaboradormariobritto"
+    "https://www.linkedin.com/in/mariobritto"
   ]
 };
 
