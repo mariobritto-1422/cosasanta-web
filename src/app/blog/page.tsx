@@ -2,7 +2,8 @@ import Link from "next/link";
 import { permanentRedirect } from "next/navigation";
 import { createClient } from "@supabase/supabase-js";
 
-export const revalidate = 3600;
+// Esta página es dinámica (usa searchParams) → se re-renderiza en cada
+// request y siempre refleja el estado actual de Supabase. Sin ISR.
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
