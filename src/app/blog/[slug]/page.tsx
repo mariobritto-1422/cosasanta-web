@@ -3,6 +3,7 @@ import Link from "next/link";
 import { createClient } from "@supabase/supabase-js";
 
 export const revalidate = 3600; // ISR: re-renderiza cada hora
+export const dynamicParams = true; // slugs nuevos de N8N se renderizan SSR automáticamente
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;

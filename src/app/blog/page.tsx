@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { permanentRedirect } from "next/navigation";
 import { createClient } from "@supabase/supabase-js";
 
 export const revalidate = 3600;
@@ -33,7 +34,16 @@ function formatDate(dateStr: string): string {
 
 const WA_NUMBER = "5492945415186";
 
-export default async function BlogPage() {
+export default async function BlogPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ post?: string }>;
+}) {
+  const { post } = await searchParams;
+  if (post) {
+    permanentRedirect(`/blog/${post}`);
+  }
+
   let posts: BlogPost[] = [];
   try {
     const { data } = await createClient(supabaseUrl, supabaseAnonKey)
