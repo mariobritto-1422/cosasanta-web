@@ -496,7 +496,7 @@ export default function AgenteContenido() {
             <div style={{ fontSize: 32, fontWeight: 800, color: "#F07428" }}>USD 29</div>
             <div style={{ color: "#8696A0", fontSize: 12, marginTop: 4 }}>/mes · Cancelá cuando quieras</div>
             <div style={{ marginTop: 16, textAlign: "left" }}>
-              {["✅ 12 posts/mes generados con IA",
+              {["✅ 6 posts mensuales generados con IA",
                 "✅ Personalizado para tu negocio",
                 "✅ Instagram + Facebook + LinkedIn",
                 "✅ Textos + hashtags + calendario",
