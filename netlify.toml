@@ -10,4 +10,4 @@
   package = "@netlify/plugin-nextjs"
 
 [functions."*"]
-  timeout_seconds = 26
+  timeout_seconds = 60
