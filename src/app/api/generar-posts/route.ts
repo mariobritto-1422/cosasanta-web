@@ -41,7 +41,10 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const data = await n8nResponse.json();
+    const raw = await n8nResponse.json();
+
+    // n8n devuelve array de items [{ posts: [...] }], normalizar
+    const data = Array.isArray(raw) ? raw[0] : raw;
 
     if (!data?.posts?.length) {
       return NextResponse.json(
