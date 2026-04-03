@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
     await supabase.from("autopost_leads").insert({
       nombre, rubro, tono, objetivo,
       whatsapp: whatsapp || null,
-      posts_generados: 12,
+      posts_generados: 6,
     });
 
     // Llamar a n8n — sin timeout de Netlify
