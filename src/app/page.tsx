@@ -10,7 +10,7 @@ interface BlogPost {
   created_at: string;
 }
 
-const WA_NUMBER = "5492945415186";
+const WA_NUMBER = "543764745849";
 const WA_LINK = `https://wa.me/${WA_NUMBER}?text=Hola%20CosaSanta%2C%20quiero%20saber%20m%C3%A1s%20sobre%20sus%20servicios`;
 const EMAIL = "hola@cosasanta.ai";
 

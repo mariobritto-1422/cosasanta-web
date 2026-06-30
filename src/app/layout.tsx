@@ -44,7 +44,7 @@ const organizationSchema = {
     "@type": "ContactPoint",
     "contactType": "customer service",
     "availableLanguage": "Spanish",
-    "url": "https://wa.me/5492945415186"
+    "url": "https://wa.me/543764745849"
   },
   "sameAs": [
     "https://www.instagram.com/cosa_santa/",

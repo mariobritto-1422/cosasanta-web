@@ -33,7 +33,7 @@ function formatDate(dateStr: string): string {
   });
 }
 
-const WA_NUMBER = "5492945415186";
+const WA_NUMBER = "543764745849";
 
 export default async function BlogPage({
   searchParams,
