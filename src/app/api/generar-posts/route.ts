@@ -17,6 +17,10 @@ const OBJ_MAP: Record<string, string> = {
   "❤️ Fidelizar clientes actuales": "fidelizar y mantener clientes existentes",
 };
 
+export async function GET() {
+  return NextResponse.json({ status: "ok" });
+}
+
 export async function POST(req: NextRequest) {
   try {
     const { nombre, rubro, tono, objetivo } = await req.json();
