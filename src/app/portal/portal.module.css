@@ -1,0 +1,206 @@
+/* Portal (/portal) y página mínima de /europa.
+   Usa las variables y tipografías de globals.css. */
+
+/* --- Colores de fondo del portal (prueba de color) ---
+   Para volver al negro anterior: poner --portal-fondo y --portal-fondo-claro
+   en #0a0a0a y --portal-grano en 0.
+   Solo aplica cuando la página tiene .lienzo (/portal); el resto del sitio
+   mantiene su fondo. html y body toman el color para que no aparezcan franjas
+   negras al hacer scroll o rebote en celular. */
+:global(html):has(.lienzo) {
+  --portal-fondo: #10120e;       /* gris profundo, abajo */
+  --portal-fondo-claro: #181b15; /* apenas más claro, arriba */
+  --portal-resplandor: rgba(184, 245, 66, 0.04); /* verde del sitio, muy tenue */
+  --portal-grano: 0.04;          /* intensidad del grano (4 %) */
+  background-color: var(--portal-fondo);
+}
+
+:global(body):has(.lienzo) {
+  background-color: var(--portal-fondo);
+}
+
+/* --- Compartido con /europa (no cambiar sin revisar esa página) --- */
+
+.portal {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 48px;
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+}
+
+.marca {
+  font-size: clamp(36px, 6vw, 56px);
+  letter-spacing: -1.5px;
+}
+
+.titulo {
+  font-size: clamp(32px, 5vw, 52px);
+  line-height: 1.05;
+  margin: 32px 0 0;
+  overflow-wrap: anywhere;
+}
+
+/* --- Portal --- */
+
+/* Contenedor propio del portal: cubre toda la pantalla */
+.lienzo {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background-color: var(--portal-fondo);
+}
+
+/* Fondo fijo: degradado vertical suave + resplandor tenue detrás de la marca */
+.fondo {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 50% 40% at 50% 38%, var(--portal-resplandor) 0%, transparent 70%),
+    linear-gradient(to bottom, var(--portal-fondo-claro) 0%, var(--portal-fondo) 100%);
+}
+
+/* Grano muy fino: ruido SVG embebido, estático, no captura clics */
+.fondo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: var(--portal-grano);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+  background-size: 140px 140px;
+}
+
+.contenido {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* La marca es la protagonista */
+.marcaPortal {
+  font-size: clamp(56px, 11vw, 120px);
+  line-height: 1;
+  letter-spacing: -3px;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.frase {
+  font-size: 18px;
+  font-weight: 300;
+  color: var(--text);
+  line-height: 1.6;
+  max-width: 600px;
+  margin: 24px 0 0;
+}
+
+.servicios {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 12px 0 0;
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.servicios li { white-space: nowrap; }
+
+.separador { margin: 0 10px; }
+
+/* Selector de región: chico y discreto */
+.region {
+  margin-top: 64px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.regionTitulo {
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+
+/* Dos columnas del mismo ancho; filas iguales para que ambos midan lo mismo */
+.botones {
+  display: grid;
+  grid-template-columns: repeat(2, 164px);
+  grid-auto-rows: 1fr;
+  gap: 12px;
+  justify-content: center;
+}
+
+.boton {
+  min-height: 44px;
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 4px 6px;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  background: transparent;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+a.boton:hover { border-color: var(--muted); }
+
+.boton:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.botonInactivo {
+  color: var(--muted);
+  cursor: default;
+}
+
+.proximamente {
+  font-size: 10.5px;
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  padding: 1px 6px;
+}
+
+@media (max-width: 768px) {
+  .portal { padding: 64px 24px; }
+  .frase { font-size: 16px; }
+  /* En celular los servicios van uno por línea, sin separadores */
+  .servicios { flex-direction: column; align-items: center; }
+  .servicios li { white-space: normal; }
+  .separador { display: none; }
+  .region { margin-top: 48px; }
+}
+
+/* Si no entran los dos botones (2 × 164 + 12 + márgenes = 388 px): apilados, con el mismo ancho */
+@media (max-width: 387px) {
+  .botones { grid-template-columns: 164px; }
+}
+
+/* Sin animaciones si el sistema pide menos movimiento o menos transparencia */
+@media (prefers-reduced-motion: reduce), (prefers-reduced-transparency: reduce) {
+  .marcaPortal { animation: none; }
+  .boton { transition: none; }
+}
