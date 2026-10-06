@@ -1,5 +1,7 @@
-/* Portal de dos puertas (/portal) y página mínima de /europa.
+/* Portal (/portal) y página mínima de /europa.
    Usa las variables y tipografías de globals.css. */
+
+/* --- Compartido con /europa (no cambiar sin revisar esa página) --- */
 
 .portal {
   min-height: 100vh;
@@ -13,12 +15,26 @@
   text-align: center;
 }
 
+.marca {
+  font-size: clamp(36px, 6vw, 56px);
+  letter-spacing: -1.5px;
+}
+
+.titulo {
+  font-size: clamp(32px, 5vw, 52px);
+  line-height: 1.05;
+  margin: 32px 0 0;
+  overflow-wrap: anywhere;
+}
+
+/* --- Portal --- */
+
 .fondo {
   position: absolute;
   inset: 0;
   z-index: 0;
   background:
-    radial-gradient(ellipse 60% 50% at 50% 30%, rgba(184, 245, 66, 0.06) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 50% at 50% 35%, rgba(184, 245, 66, 0.06) 0%, transparent 70%),
     radial-gradient(ellipse 40% 40% at 20% 80%, rgba(66, 245, 200, 0.04) 0%, transparent 60%);
 }
 
@@ -32,98 +48,115 @@
   align-items: center;
 }
 
-.marca {
-  font-size: clamp(36px, 6vw, 56px);
-  letter-spacing: -1.5px;
+/* La marca es la protagonista */
+.marcaPortal {
+  font-size: clamp(56px, 11vw, 120px);
+  line-height: 1;
+  letter-spacing: -3px;
+  margin: 0;
+  overflow-wrap: anywhere;
 }
 
 .frase {
   font-size: 18px;
   font-weight: 300;
-  color: var(--muted);
-  line-height: 1.7;
+  color: var(--text);
+  line-height: 1.6;
   max-width: 600px;
-  margin: 16px 0 56px;
+  margin: 24px 0 0;
 }
 
-.titulo {
-  font-size: clamp(32px, 5vw, 52px);
-  line-height: 1.05;
-  margin: 32px 0 0;
-  overflow-wrap: anywhere;
+.servicios {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 12px 0 0;
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.6;
 }
 
-/* Dos columnas iguales; las filas también iguales (misma altura). */
-.puertas {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  grid-auto-rows: 1fr;
-  gap: 24px;
-  width: 100%;
-}
+.servicios li { white-space: nowrap; }
 
-.card {
+.separador { margin: 0 10px; }
+
+/* Selector de región: chico y discreto */
+.region {
+  margin-top: 64px;
   display: flex;
   flex-direction: column;
+  align-items: center;
+}
+
+.regionTitulo {
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+
+/* Dos columnas del mismo ancho; filas iguales para que ambos midan lo mismo */
+.botones {
+  display: grid;
+  grid-template-columns: repeat(2, 164px);
+  grid-auto-rows: 1fr;
+  gap: 12px;
+  justify-content: center;
+}
+
+.boton {
+  min-height: 44px;
   min-width: 0;
-  background: var(--card);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 4px 6px;
+  padding: 8px 10px;
   border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 40px 36px;
-  text-align: left;
+  border-radius: 100px;
+  background: transparent;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 500;
   text-decoration: none;
-  color: inherit;
-  transition: border-color 0.3s, transform 0.3s;
+  transition: border-color 0.2s, color 0.2s;
 }
 
-.cardLink:hover {
-  border-color: rgba(184, 245, 66, 0.3);
-  transform: translateY(-4px);
+a.boton:hover { border-color: var(--muted); }
+
+.boton:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
 }
 
-.cardInactiva {
+.botonInactivo {
+  color: var(--muted);
   cursor: default;
 }
 
-.cardTitulo {
-  font-size: clamp(28px, 3vw, 36px);
-  margin-bottom: 12px;
-  overflow-wrap: anywhere;
-}
-
-.cardTexto {
-  font-size: 15px;
-  color: var(--muted);
-  line-height: 1.7;
-  overflow-wrap: anywhere;
-}
-
-.cardPie {
-  margin-top: auto;
-  padding-top: 32px;
-}
-
-.entrar {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--accent);
-}
-
 .proximamente {
-  display: inline-block;
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
+  font-size: 10.5px;
+  font-weight: 400;
+  line-height: 1.4;
   color: var(--muted);
   border: 1px solid var(--border);
   border-radius: 100px;
-  padding: 6px 14px;
+  padding: 1px 6px;
 }
 
 @media (max-width: 768px) {
   .portal { padding: 64px 24px; }
-  .frase { font-size: 16px; margin-bottom: 40px; }
-  .puertas { grid-template-columns: minmax(0, 1fr); max-width: 420px; gap: 16px; }
-  .card { padding: 32px 28px; }
+  .frase { font-size: 16px; }
+  /* En celular los servicios van uno por línea, sin separadores */
+  .servicios { flex-direction: column; align-items: center; }
+  .servicios li { white-space: normal; }
+  .separador { display: none; }
+  .region { margin-top: 48px; }
+}
+
+/* Si no entran los dos botones (2 × 164 + 12 + márgenes = 388 px): apilados, con el mismo ancho */
+@media (max-width: 387px) {
+  .botones { grid-template-columns: 164px; }
 }
