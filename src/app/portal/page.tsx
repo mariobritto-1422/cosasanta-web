@@ -10,6 +10,8 @@ const DESCRIPCION =
 export const metadata: Metadata = {
   title: "cosasanta — Tecnología e inteligencia artificial para hacer crecer tu negocio",
   description: DESCRIPCION,
+  // Sin las palabras clave del layout (orientadas a Argentina)
+  keywords: null,
   robots: "noindex, nofollow",
   openGraph: {
     url: "https://cosasanta.com/portal",
