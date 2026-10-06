@@ -1,4 +1,4 @@
-import { createClient } from "@supabase/supabase-js";
+import { getSupabasePublic, logSupabaseError } from "@/lib/supabase";
 import RevealObserver from "@/components/RevealObserver";
 
 interface BlogPost {
@@ -32,19 +32,18 @@ function formatFecha(dateStr: string): string {
 
 export default async function Home() {
   let blogPosts: BlogPost[] = [];
+  // si Supabase falla, la sección queda vacía sin romper la home
   try {
-    const { data } = await createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    )
+    const { data, error } = await getSupabasePublic()
       .from("blog_posts")
       .select("id, titulo, slug, resumen, categoria, created_at")
       .eq("publicado", true)
       .order("created_at", { ascending: false })
       .limit(3);
+    logSupabaseError("home: últimos artículos", error);
     blogPosts = data || [];
-  } catch {
-    // si Supabase falla, la sección queda vacía sin romper la home
+  } catch (err) {
+    console.error("[supabase] home: últimos artículos:", err);
   }
 
   const faqSchema = {

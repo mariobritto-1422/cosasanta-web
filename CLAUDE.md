@@ -41,7 +41,7 @@ cosasanta-web/
 │   │   ├── LeadForm.tsx                      ← form contacto → tabla leads
 │   │   └── AgenteContenido.tsx               ← chatbot AutoPost (702 líneas)
 │   └── lib/
-│       └── supabase.ts                       ← createClient anon
+│       └── supabase.ts                       ← getSupabasePublic() + logSupabaseError()
 ├── public/
 │   └── googlec56ec697a387773c.html           ← verificación Search Console
 ├── next.config.ts
@@ -55,10 +55,10 @@ npm run build   # build producción
 npm run start   # servidor
 ```
 
-## VARIABLES DE ENTORNO (.env.example)
+## VARIABLES DE ENTORNO (cargarlas en Netlify; NO van en netlify.toml)
 ```
 NEXT_PUBLIC_SUPABASE_URL=https://xxxxxxxxxxxxxxxxxxxx.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=   ← sb_publishable_... (no la legacy anon)
 ```
 
 ## TABLAS SUPABASE

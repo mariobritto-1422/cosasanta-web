@@ -1,12 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { createClient } from "@supabase/supabase-js";
+import { notFound } from "next/navigation";
+import { getSupabasePublic, logSupabaseError } from "@/lib/supabase";
 
 export const revalidate = 3600; // ISR: re-renderiza cada hora
 export const dynamicParams = true; // slugs nuevos de N8N se renderizan SSR automáticamente
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
 interface BlogPost {
   id: string;
@@ -16,10 +14,6 @@ interface BlogPost {
   contenido: string | null;
   categoria: string;
   created_at: string;
-}
-
-function getSupabase() {
-  return createClient(supabaseUrl, supabaseAnonKey);
 }
 
 function formatDate(dateStr: string): string {
@@ -34,10 +28,11 @@ function formatDate(dateStr: string): string {
 // Los artículos nuevos de N8N se renderizan SSR en la primera visita
 // y quedan cacheados automáticamente (dynamicParams = true por defecto).
 export async function generateStaticParams() {
-  const { data } = await getSupabase()
+  const { data, error } = await getSupabasePublic()
     .from("blog_posts")
     .select("slug")
     .eq("publicado", true);
+  logSupabaseError("blog: generateStaticParams", error);
   return (data || []).map((post: { slug: string }) => ({ slug: post.slug }));
 }
 
@@ -47,12 +42,13 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const { data: post } = await getSupabase()
+  const { data: post, error } = await getSupabasePublic()
     .from("blog_posts")
     .select("titulo, resumen, created_at")
     .eq("slug", slug)
     .eq("publicado", true)
-    .single();
+    .maybeSingle();
+  logSupabaseError(`blog/${slug}: metadata`, error);
 
   if (!post) {
     return { title: "Artículo no encontrado — CosaSanta" };
@@ -84,12 +80,23 @@ export default async function BlogPostPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const { data: post } = await getSupabase()
+  const { data: post, error } = await getSupabasePublic()
     .from("blog_posts")
     .select("id, titulo, slug, resumen, contenido, categoria, created_at")
     .eq("slug", slug)
     .eq("publicado", true)
-    .single<BlogPost>();
+    .maybeSingle<BlogPost>();
+
+  // Si Supabase falla NO respondemos 404: lanzamos el error (500) para no
+  // cachear un "no encontrado" falso; con ISR se sigue sirviendo la última
+  // versión buena del artículo si existía.
+  if (error) {
+    logSupabaseError(`blog/${slug}: artículo`, error);
+    throw new Error(`No se pudo cargar el artículo ${slug}`);
+  }
+  if (!post) {
+    notFound();
+  }
 
   const schema = post
     ? {
@@ -139,25 +146,6 @@ export default async function BlogPostPage({
         />
       )}
 
-      {!post ? (
-        <section
-          style={{
-            paddingTop: "120px",
-            minHeight: "100vh",
-            textAlign: "center",
-          }}
-        >
-          <p style={{ fontSize: "40px", marginBottom: "16px" }}>🔍</p>
-          <p style={{ color: "var(--muted)" }}>Artículo no encontrado.</p>
-          <Link
-            href="/blog"
-            className="btn-secondary"
-            style={{ marginTop: "32px", display: "inline-block" }}
-          >
-            ← Volver al blog
-          </Link>
-        </section>
-      ) : (
         <article style={{ paddingTop: "120px", minHeight: "100vh" }}>
           <div
             style={{ maxWidth: "780px", margin: "0 auto", padding: "0 48px 96px" }}
@@ -259,7 +247,6 @@ export default async function BlogPostPage({
             </div>
           </div>
         </article>
-      )}
 
       <footer>
         <Link href="/" className="logo">

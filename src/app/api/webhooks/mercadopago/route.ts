@@ -1,10 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
-
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+import { logSupabaseError } from "@/lib/supabase";
+import { getSupabaseAdmin } from "@/lib/supabase-admin";
 
 export async function POST(req: NextRequest) {
   try {
@@ -41,22 +37,32 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ ok: true });
       }
 
+      const supabaseAdmin = getSupabaseAdmin();
+
       if (status === "authorized") {
-        await supabaseAdmin
+        const { error } = await supabaseAdmin
           .from("autopost_users")
           .upsert(
             { email, estado: "pro", mp_preapproval_id: preapprovalId },
             { onConflict: "email" }
           );
-        console.log(`✅ Usuario ${email} activado como Pro`);
+        if (error) {
+          logSupabaseError(`webhook MP: activar Pro (${email})`, error);
+        } else {
+          console.log(`✅ Usuario ${email} activado como Pro`);
+        }
       }
 
       if (status === "cancelled" || status === "paused") {
-        await supabaseAdmin
+        const { error } = await supabaseAdmin
           .from("autopost_users")
           .update({ estado: "expired" })
           .eq("email", email);
-        console.log(`⚠️ Suscripción cancelada para ${email}`);
+        if (error) {
+          logSupabaseError(`webhook MP: cancelar suscripción (${email})`, error);
+        } else {
+          console.log(`⚠️ Suscripción cancelada para ${email}`);
+        }
       }
     }
 
