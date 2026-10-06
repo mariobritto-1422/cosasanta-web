@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getSupabasePublic, logSupabaseError } from "@/lib/supabase";
+import { SHOW_PROYECTOS, SHOW_WHATSAPP } from "@/lib/site-flags";
 
 export const revalidate = 3600; // ISR: re-renderiza cada hora
 export const dynamicParams = true; // slugs nuevos de N8N se renderizan SSR automáticamente
@@ -51,11 +52,11 @@ export async function generateMetadata({
   logSupabaseError(`blog/${slug}: metadata`, error);
 
   if (!post) {
-    return { title: "Artículo no encontrado — CosaSanta" };
+    return { title: "Artículo no encontrado — cosasanta" };
   }
 
   return {
-    title: `${post.titulo} — CosaSanta`,
+    title: `${post.titulo} — cosasanta`,
     description: post.resumen || undefined,
     alternates: {
       canonical: `https://cosasanta.com/blog/${slug}`,
@@ -66,7 +67,7 @@ export async function generateMetadata({
       url: `https://cosasanta.com/blog/${slug}`,
       type: "article",
       publishedTime: post.created_at,
-      siteName: "CosaSanta",
+      siteName: "cosasanta",
     },
     robots: "index, follow",
   };
@@ -108,12 +109,12 @@ export default async function BlogPostPage({
         dateModified: post.created_at,
         author: {
           "@type": "Organization",
-          name: "CosaSanta",
+          name: "cosasanta",
           url: "https://cosasanta.com",
         },
         publisher: {
           "@type": "Organization",
-          name: "CosaSanta",
+          name: "cosasanta",
           url: "https://cosasanta.com",
         },
         url: `https://cosasanta.com/blog/${slug}`,
@@ -128,11 +129,10 @@ export default async function BlogPostPage({
       <nav>
         <Link href="/" className="logo">
           cosa<span className="accent">santa</span>
-          <span className="muted">.ai</span>
         </Link>
         <ul>
           <li><a href="/#servicios">Servicios</a></li>
-          <li><a href="/#proyectos">Proyectos</a></li>
+          {SHOW_PROYECTOS && <li><a href="/#proyectos">Proyectos</a></li>}
           <li><a href="/#proceso">Proceso</a></li>
           <li><Link href="/blog" style={{ color: "var(--text)" }}>Blog</Link></li>
           <li><a href="/#contacto" className="nav-cta">Hablemos →</a></li>
@@ -251,28 +251,29 @@ export default async function BlogPostPage({
       <footer>
         <Link href="/" className="logo">
           cosa<span className="accent">santa</span>
-          <span className="muted">.ai</span>
         </Link>
         <div className="footer-links">
           <a href="/#servicios">Servicios</a>
-          <a href="/#proyectos">Proyectos</a>
+          {SHOW_PROYECTOS && <a href="/#proyectos">Proyectos</a>}
           <Link href="/blog">Blog</Link>
           <a href="/#contacto">Contacto</a>
         </div>
         <div className="footer-copy">
-          © 2026 CosaSanta · Argentina &amp; Latam · hecho en Misiones
+          © 2026 cosasanta · Argentina &amp; Latam · hecho en Misiones
         </div>
       </footer>
 
-      <a
-        href={`https://wa.me/${WA_NUMBER}`}
-        className="wa-float"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="WhatsApp"
-      >
-        💬
-      </a>
+      {SHOW_WHATSAPP && (
+        <a
+          href={`https://wa.me/${WA_NUMBER}`}
+          className="wa-float"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="WhatsApp"
+        >
+          💬
+        </a>
+      )}
     </>
   );
 }

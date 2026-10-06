@@ -1,5 +1,6 @@
 import { getSupabasePublic, logSupabaseError } from "@/lib/supabase";
 import RevealObserver from "@/components/RevealObserver";
+import { SHOW_PROYECTOS, SHOW_WHATSAPP } from "@/lib/site-flags";
 
 interface BlogPost {
   id: string;
@@ -12,7 +13,7 @@ interface BlogPost {
 
 const WA_NUMBER = "543764745849";
 const WA_LINK = `https://wa.me/${WA_NUMBER}?text=Hola%20CosaSanta%2C%20quiero%20saber%20m%C3%A1s%20sobre%20sus%20servicios`;
-const EMAIL = "hola@cosasanta.ai";
+const EMAIL = "cosasantaonline@gmail.com";
 
 const EMOJI_MAP: Record<string, string> = {
   "Claude AI": "🧠",
@@ -52,10 +53,10 @@ export default async function Home() {
     "mainEntity": [
       {
         "@type": "Question",
-        "name": "¿Qué servicios ofrece Cosa Santa?",
+        "name": "¿Qué servicios ofrece cosasanta?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Cosa Santa ofrece desarrollo de páginas web, automatización con IA para WhatsApp, sistemas de gestión para clínicas y salones de belleza, marketing digital y merchandising empresarial para pymes y profesionales de Argentina y Latam."
+          "text": "cosasanta ofrece desarrollo de páginas web, automatización con IA para WhatsApp, sistemas de gestión para clínicas y salones de belleza, marketing digital y merchandising empresarial para pymes y profesionales de Argentina y Latam."
         }
       },
       {
@@ -63,7 +64,7 @@ export default async function Home() {
         "name": "¿Hacen bots de WhatsApp con inteligencia artificial en Argentina?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Sí. En Cosa Santa desarrollamos bots inteligentes para WhatsApp usando Claude AI, n8n y Evolution API. Automatizamos la atención al cliente 24/7 para consultorios, clínicas, salones de belleza y comercios de toda Argentina."
+          "text": "Sí. En cosasanta desarrollamos bots inteligentes para WhatsApp usando Claude AI, n8n y Evolution API. Automatizamos la atención al cliente 24/7 para consultorios, clínicas, salones de belleza y comercios de toda Argentina."
         }
       },
       {
@@ -76,7 +77,7 @@ export default async function Home() {
       },
       {
         "@type": "Question",
-        "name": "¿Cuánto cuesta una página web en Cosa Santa?",
+        "name": "¿Cuánto cuesta una página web en cosasanta?",
         "acceptedAnswer": {
           "@type": "Answer",
           "text": "El precio depende del proyecto. Desarrollamos desde landing pages simples hasta sistemas SaaS completos. Contactanos para una propuesta personalizada sin compromiso."
@@ -87,7 +88,7 @@ export default async function Home() {
         "name": "¿Qué es Topaciobot?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Topaciobot es un sistema de gestión para salones de belleza desarrollado por Cosa Santa. Incluye agenda visual, gestión de empleados, catálogo de servicios y dashboard de comisiones. Es una PWA instalable en cualquier dispositivo."
+          "text": "Topaciobot es un sistema de gestión para salones de belleza desarrollado por cosasanta. Incluye agenda visual, gestión de empleados, catálogo de servicios y dashboard de comisiones. Es una PWA instalable en cualquier dispositivo."
         }
       }
     ]
@@ -104,11 +105,10 @@ export default async function Home() {
       <nav>
         <a href="/" className="logo">
           cosa<span className="accent">santa</span>
-          <span className="muted">.ai</span>
         </a>
         <ul>
           <li><a href="#servicios">Servicios</a></li>
-          <li><a href="#proyectos">Proyectos</a></li>
+          {SHOW_PROYECTOS && <li><a href="#proyectos">Proyectos</a></li>}
           <li><a href="#proceso">Proceso</a></li>
           <li><a href="#blog">Blog</a></li>
           <li><a href="/autopost" className="nav-autopost">AutoPost ✨</a></li>
@@ -134,27 +134,11 @@ export default async function Home() {
             <a href="#contacto" className="btn-primary">
               Quiero automatizar mi negocio →
             </a>
-            <a href="#proyectos" className="btn-secondary">
-              Ver proyectos
-            </a>
-          </div>
-        </div>
-        <div className="stats reveal">
-          <div className="stat">
-            <div className="stat-num">11+</div>
-            <div className="stat-label">Proyectos desarrollados</div>
-          </div>
-          <div className="stat" style={{ paddingLeft: "48px" }}>
-            <div className="stat-num">3</div>
-            <div className="stat-label">SaaS en producción</div>
-          </div>
-          <div className="stat" style={{ paddingLeft: "48px" }}>
-            <div className="stat-num">100%</div>
-            <div className="stat-label">IA integrada en cada solución</div>
-          </div>
-          <div className="stat" style={{ paddingLeft: "48px" }}>
-            <div className="stat-num">24/7</div>
-            <div className="stat-label">Automatización activa</div>
+            {SHOW_PROYECTOS && (
+              <a href="#proyectos" className="btn-secondary">
+                Ver proyectos
+              </a>
+            )}
           </div>
         </div>
       </section>
@@ -241,7 +225,8 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* PROYECTOS */}
+      {/* PROYECTOS (oculta mientras SHOW_PROYECTOS sea false) */}
+      {SHOW_PROYECTOS && (
       <section id="proyectos" style={{ padding: "96px 48px" }}>
         <div className="proyectos-header reveal">
           <div>
@@ -322,6 +307,7 @@ export default async function Home() {
           </div>
         </div>
       </section>
+      )}
 
       {/* PROCESO */}
       <section className="proceso" id="proceso">
@@ -435,18 +421,22 @@ export default async function Home() {
             </a>
           </div>
 
-          <div className="cta-divider reveal">o contactanos directo</div>
+          {SHOW_WHATSAPP && (
+            <>
+              <div className="cta-divider reveal">o contactanos directo</div>
 
-          <div className="cta-actions reveal">
-            <a
-              href={WA_LINK}
-              className="btn-primary"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              💬 WhatsApp directo
-            </a>
-          </div>
+              <div className="cta-actions reveal">
+                <a
+                  href={WA_LINK}
+                  className="btn-primary"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  💬 WhatsApp directo
+                </a>
+              </div>
+            </>
+          )}
           <p style={{ marginTop: "24px", fontSize: "13px", color: "var(--muted)" }}>
             Respondemos en menos de 24hs · Argentina & Latam
           </p>
@@ -457,16 +447,15 @@ export default async function Home() {
       <footer>
         <a href="/" className="logo">
           cosa<span className="accent">santa</span>
-          <span className="muted">.ai</span>
         </a>
         <div className="footer-links">
           <a href="#servicios">Servicios</a>
-          <a href="#proyectos">Proyectos</a>
+          {SHOW_PROYECTOS && <a href="#proyectos">Proyectos</a>}
           <a href="#blog">Blog</a>
           <a href="#contacto">Contacto</a>
         </div>
         <div className="footer-copy">
-          © 2026 CosaSanta · Argentina & Latam · hecho en Misiones
+          © 2026 cosasanta · Argentina & Latam · hecho en Misiones
         </div>
         <div className="footer-copy" style={{ marginTop: "8px", fontSize: "12px" }}>
           Páginas web · Bots WhatsApp · Marketing Digital · Merchandising · Argentina & Latam
@@ -474,15 +463,17 @@ export default async function Home() {
       </footer>
 
       {/* WHATSAPP FLOAT */}
-      <a
-        href={`https://wa.me/${WA_NUMBER}`}
-        className="wa-float"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="WhatsApp"
-      >
-        💬
-      </a>
+      {SHOW_WHATSAPP && (
+        <a
+          href={`https://wa.me/${WA_NUMBER}`}
+          className="wa-float"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="WhatsApp"
+        >
+          💬
+        </a>
+      )}
     </>
   );
 }
