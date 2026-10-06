@@ -227,9 +227,9 @@ OBJ_MAP = {
 
 ```env
 NEXT_PUBLIC_SUPABASE_URL=
-NEXT_PUBLIC_SUPABASE_ANON_KEY=
-SUPABASE_SERVICE_ROLE_KEY=
-MERCADOPAGO_ACCESS_TOKEN=
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=   ← sb_publishable_... (no la legacy anon)
+SUPABASE_SECRET_KEY=                    ← sb_secret_... (solo servidor)
+MP_ACCESS_TOKEN=
 ANTHROPIC_API_KEY=           ← nueva, reemplaza la llamada a n8n
 ```
 

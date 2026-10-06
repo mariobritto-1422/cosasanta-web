@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { supabase } from "@/lib/supabase";
+import { getSupabasePublic, logSupabaseError } from "@/lib/supabase";
 
 type FormState = "idle" | "loading" | "success" | "error";
 
@@ -28,7 +28,7 @@ export default function LeadForm() {
     setStatus("loading");
     setErrorMsg("");
 
-    const { error } = await supabase.from("leads").insert({
+    const { error } = await getSupabasePublic().from("leads").insert({
       nombre: form.nombre.trim(),
       email: form.email.trim(),
       whatsapp: form.whatsapp.trim() || null,
@@ -37,6 +37,7 @@ export default function LeadForm() {
     });
 
     if (error) {
+      logSupabaseError("LeadForm: guardar lead", error);
       setStatus("error");
       setErrorMsg("Hubo un error al enviar. Escribinos por WhatsApp.");
       return;

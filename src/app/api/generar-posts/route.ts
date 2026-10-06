@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+import { getSupabasePublic, logSupabaseError } from "@/lib/supabase";
 
 export const maxDuration = 30;
 
@@ -119,14 +119,11 @@ Cada post debe tener máximo 150 palabras. Sin introducción ni explicación, de
     }
 
     // Guardar lead en Supabase
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    );
-    await supabase.from("autopost_leads").insert({
+    const { error: errorLead } = await getSupabasePublic().from("autopost_leads").insert({
       nombre, rubro, tono, objetivo,
       posts_generados: 3,
     });
+    logSupabaseError("generar-posts: guardar lead", errorLead);
 
     return NextResponse.json({ posts: parsed.posts });
 

@@ -1,12 +1,9 @@
 import Link from "next/link";
 import { permanentRedirect } from "next/navigation";
-import { createClient } from "@supabase/supabase-js";
+import { getSupabasePublic, logSupabaseError } from "@/lib/supabase";
 
 // Esta página es dinámica (usa searchParams) → se re-renderiza en cada
 // request y siempre refleja el estado actual de Supabase. Sin ISR.
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
 interface BlogPost {
   id: string;
@@ -47,14 +44,15 @@ export default async function BlogPage({
 
   let posts: BlogPost[] = [];
   try {
-    const { data } = await createClient(supabaseUrl, supabaseAnonKey)
+    const { data, error } = await getSupabasePublic()
       .from("blog_posts")
       .select("id, titulo, slug, resumen, categoria, created_at")
       .eq("publicado", true)
       .order("created_at", { ascending: false });
+    logSupabaseError("blog: listado de artículos", error);
     posts = data || [];
-  } catch {
-    // tabla puede no existir aún
+  } catch (err) {
+    console.error("[supabase] blog: listado de artículos:", err);
   }
 
   return (

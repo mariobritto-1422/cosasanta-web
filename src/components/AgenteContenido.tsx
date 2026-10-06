@@ -258,6 +258,7 @@ export default function AgenteContenido() {
   const [diasRestantes, setDiasRestantes] = useState<number>(7);
   const [emailInput, setEmailInput]       = useState("");
   const [loadingPago, setLoadingPago]     = useState(false);
+  const [errorVerif, setErrorVerif]       = useState("");
   const botStartedRef                     = useRef(false);
 
   const scroll = () =>
@@ -265,18 +266,26 @@ export default function AgenteContenido() {
 
   const verificarUsuario = async (email: string) => {
     setUserEstado("checking");
+    setErrorVerif("");
     try {
       const res = await fetch("/api/autopost/usuario", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
       });
-      const data = await res.json();
+      const data = await res.json().catch(() => null);
+      const estadosValidos = ["trial", "pro", "expired"];
+      if (!res.ok || !data || !estadosValidos.includes(data.estado)) {
+        throw new Error(data?.error || `HTTP ${res.status}`);
+      }
       setUserEmail(email);
       setUserEstado(data.estado);
       if (data.diasRestantes) setDiasRestantes(data.diasRestantes);
-    } catch {
-      setUserEstado("trial"); // fallback permisivo
+    } catch (err) {
+      // Sin verificación no se habilita la prueba: volver a la pantalla de email.
+      console.error("Error verificando usuario AutoPost:", err);
+      setUserEstado("idle");
+      setErrorVerif("No pudimos verificar tu cuenta. Intentá de nuevo en unos minutos.");
     }
   };
 
@@ -456,6 +465,12 @@ export default function AgenteContenido() {
                      cursor: emailInput.includes("@") ? "pointer" : "default" }}>
             Empezar prueba gratuita →
           </button>
+          {errorVerif && (
+            <p role="alert" style={{ color: "#F15C6D", fontSize: 13,
+                                     textAlign: "center", marginTop: 12 }}>
+              {errorVerif}
+            </p>
+          )}
           <p style={{ color: "rgba(255,255,255,0.2)", fontSize: 10,
                       textAlign: "center", marginTop: 12, letterSpacing: 1 }}>
             7 días gratis · Sin tarjeta · Sin compromiso
