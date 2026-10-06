@@ -31,7 +31,7 @@ interface Step {
 const STEPS: Step[] = [
   {
     id: "bienvenida",
-    bot: `¡Hola! 👋 Soy *AutoPost*, tu agente de contenido de *cosa$anta*.\n\nEn menos de 2 minutos te genero un *calendario completo de publicaciones* personalizado para tu negocio. 🚀\n\n¿Empezamos?`,
+    bot: `¡Hola! 👋 Soy *AutoPost*, tu agente de contenido de *cosasanta*.\n\nEn menos de 2 minutos te genero un *calendario completo de publicaciones* personalizado para tu negocio. 🚀\n\n¿Empezamos?`,
     tipo: "opciones",
     opciones: ["¡Sí, empecemos! 🔥", "¿Cómo funciona?"],
     respuestaAlternativa: `Perfecto. Solo necesito *4 datos* sobre tu negocio y la IA hace el resto.\n\nGenero posts para Instagram, Facebook y LinkedIn — con texto, formato y hashtags listos para publicar.\n\n¿Arrancamos?`,
@@ -566,7 +566,7 @@ export default function AgenteContenido() {
           }}>🤖</div>
           <div style={{ flex: 1 }}>
             <div style={{ fontSize: 15, fontWeight: 600, color: WA_TEXT }}>AutoPost</div>
-            <div style={{ fontSize: 11, color: WA_GREEN }}>cosa$anta · en línea</div>
+            <div style={{ fontSize: 11, color: WA_GREEN }}>cosasanta · en línea</div>
             {userEstado === "trial" && (
               <div style={{ fontSize: 9, color: ORANGE, letterSpacing: 1 }}>
                 {diasRestantes} día{diasRestantes !== 1 ? "s" : ""} de prueba restantes

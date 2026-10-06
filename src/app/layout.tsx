@@ -17,7 +17,7 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "CosaSanta — Páginas Web, Marketing Digital y Automatización con IA | Argentina & Latam",
+  title: "cosasanta — Páginas Web, Marketing Digital y Automatización con IA | Argentina & Latam",
   description:
     "Desarrollamos páginas web, landing pages, bots de WhatsApp y sistemas de gestión para clínicas, consultorios, salones de belleza y empresas de Argentina, Buenos Aires y Misiones. Marketing digital, SEO y merchandising empresarial con IA.",
   keywords:
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
 const organizationSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
-  "name": "Cosa Santa",
+  "name": "cosasanta",
   "url": "https://cosasanta.com",
   "description": "Agencia de automatización con IA, desarrollo web y marketing digital para empresas de Argentina y Latam.",
   "address": {
@@ -56,7 +56,7 @@ const organizationSchema = {
 const localBusinessSchema = {
   "@context": "https://schema.org",
   "@type": "LocalBusiness",
-  "name": "Cosa Santa",
+  "name": "cosasanta",
   "url": "https://cosasanta.com",
   "description": "Páginas web, bots de WhatsApp con IA, sistemas de gestión y marketing digital para clínicas, consultorios, salones de belleza y empresas de Argentina.",
   "address": {

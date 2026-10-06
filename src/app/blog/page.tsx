@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { permanentRedirect } from "next/navigation";
 import { getSupabasePublic, logSupabaseError } from "@/lib/supabase";
+import { SHOW_PROYECTOS, SHOW_WHATSAPP } from "@/lib/site-flags";
 
 // Esta página es dinámica (usa searchParams) → se re-renderiza en cada
 // request y siempre refleja el estado actual de Supabase. Sin ISR.
@@ -60,11 +61,10 @@ export default async function BlogPage({
       <nav>
         <Link href="/" className="logo">
           cosa<span className="accent">santa</span>
-          <span className="muted">.ai</span>
         </Link>
         <ul>
           <li><a href="/#servicios">Servicios</a></li>
-          <li><a href="/#proyectos">Proyectos</a></li>
+          {SHOW_PROYECTOS && <li><a href="/#proyectos">Proyectos</a></li>}
           <li><a href="/#proceso">Proceso</a></li>
           <li><Link href="/blog" style={{ color: "var(--text)" }}>Blog</Link></li>
           <li><a href="/#contacto" className="nav-cta">Hablemos →</a></li>
@@ -127,28 +127,29 @@ export default async function BlogPage({
       <footer>
         <Link href="/" className="logo">
           cosa<span className="accent">santa</span>
-          <span className="muted">.ai</span>
         </Link>
         <div className="footer-links">
           <a href="/#servicios">Servicios</a>
-          <a href="/#proyectos">Proyectos</a>
+          {SHOW_PROYECTOS && <a href="/#proyectos">Proyectos</a>}
           <Link href="/blog">Blog</Link>
           <a href="/#contacto">Contacto</a>
         </div>
         <div className="footer-copy">
-          © 2026 CosaSanta · Argentina &amp; Latam · hecho en Misiones
+          © 2026 cosasanta · Argentina &amp; Latam · hecho en Misiones
         </div>
       </footer>
 
-      <a
-        href={`https://wa.me/${WA_NUMBER}`}
-        className="wa-float"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="WhatsApp"
-      >
-        💬
-      </a>
+      {SHOW_WHATSAPP && (
+        <a
+          href={`https://wa.me/${WA_NUMBER}`}
+          className="wa-float"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="WhatsApp"
+        >
+          💬
+        </a>
+      )}
     </>
   );
 }

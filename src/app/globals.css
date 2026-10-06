@@ -238,45 +238,6 @@ h1 .line2 { color: var(--muted); }
   background: rgba(255, 255, 255, 0.03);
 }
 
-/* STATS BAR */
-.stats {
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-  padding: 32px 48px;
-  display: flex;
-  gap: 0;
-  animation: fadeUp 0.6s 0.4s ease both;
-  position: relative;
-  z-index: 1;
-}
-
-.stat {
-  flex: 1;
-  padding: 0 48px 0 0;
-  border-right: 1px solid var(--border);
-}
-
-.stat:last-child {
-  border-right: none;
-  padding-left: 48px;
-  padding-right: 0;
-}
-
-.stat-num {
-  font-family: var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif;
-  font-size: 36px;
-  font-weight: 800;
-  color: var(--accent);
-  letter-spacing: -1px;
-  line-height: 1;
-}
-
-.stat-label {
-  font-size: 13px;
-  color: var(--muted);
-  margin-top: 4px;
-}
-
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
@@ -669,10 +630,6 @@ footer .logo { font-size: 18px; }
   nav ul { display: none; }
   .hero { padding: 100px 24px 60px; }
   section { padding: 64px 24px; }
-  .stats { padding: 24px; flex-direction: column; gap: 24px; }
-  .stat { border-right: none; border-bottom: 1px solid var(--border); padding: 0 0 24px; }
-  .stat:last-child { border-bottom: none; padding: 0; }
-  .stat-num { font-size: 28px; }
   .services-grid { grid-template-columns: 1fr; }
   .proyectos-grid { grid-template-columns: 1fr; }
   .proceso-steps { grid-template-columns: 1fr 1fr; gap: 40px; }
