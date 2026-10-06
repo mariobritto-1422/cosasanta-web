@@ -12,4 +12,4 @@ export const SHOW_WHATSAPP = false;
 
 // Página /europa y la tarjeta "Europa" del portal. Con false, /europa da 404
 // y la tarjeta muestra "Próximamente" sin enlace.
-export const SHOW_EUROPA = false;
+export const SHOW_EUROPA = true;
