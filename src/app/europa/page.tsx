@@ -116,7 +116,8 @@ export default function Europa() {
 
         <div className={styles.tarjetas}>
           {EUROPA_SERVICIOS.tarjetas.map((t) => (
-            <article key={t.nombre} className={styles.tarjeta}>
+            // Toda la tarjeta enlaza a su ficha
+            <a key={t.nombre} href={t.href} className={`${styles.tarjeta} ${styles.tarjetaEnlace}`}>
               <div className={styles.tarjetaCabeza}>
                 <span className={styles.tarjetaNombre}>{t.nombre}</span>
                 <span className={styles.estado}>{t.estado}</span>
@@ -124,7 +125,7 @@ export default function Europa() {
               <h3 className={styles.h3}>{t.titular}</h3>
               <p>{t.frase}</p>
               {t.pie && <p className={styles.tarjetaPie}>{t.pie}</p>}
-            </article>
+            </a>
           ))}
         </div>
 

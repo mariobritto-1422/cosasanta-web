@@ -257,6 +257,17 @@
   white-space: nowrap;
 }
 
+/* Tarjeta completa como enlace a su ficha */
+.tarjetaEnlace {
+  text-decoration: none;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.tarjetaEnlace:hover {
+  border-color: rgba(184, 245, 66, 0.35);
+  background: rgba(240, 240, 238, 0.04);
+}
+
 .tarjetaPie {
   margin-top: auto;
   padding-top: 20px;
@@ -345,6 +356,7 @@
   :global(html):has(.pagina) { scroll-behavior: auto; }
   .titulo { animation: none; }
   .cta,
-  .menuEnlace { transition: none; }
+  .menuEnlace,
+  .tarjetaEnlace { transition: none; }
   .cta:hover { transform: none; }
 }

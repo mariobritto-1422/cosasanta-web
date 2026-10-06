@@ -1,0 +1,151 @@
+/* Fichas de servicio de /europa. El fondo, la cabecera, el pie y las cajas
+   vienen de europa.module.css; aquí solo lo propio de la ficha. */
+
+.ficha {
+  max-width: 1136px;
+  margin: 0 auto;
+  padding: 72px 48px 96px;
+  color: var(--europa-texto-suave);
+  overflow-wrap: break-word;
+}
+
+.etiquetas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+/* Las etiquetas largas pueden partirse en móvil sin salirse */
+.etiquetas > span { white-space: normal; }
+
+.titulo {
+  font-size: clamp(32px, 5vw, 60px);
+  line-height: 1.08;
+  letter-spacing: -1.5px;
+  max-width: 900px;
+  margin-bottom: 20px;
+  color: var(--text);
+}
+
+.entradilla {
+  font-size: 19px;
+  font-weight: 300;
+  line-height: 1.6;
+  max-width: 760px;
+  margin-bottom: 56px;
+}
+
+/* Parejas de cajas: dos columnas iguales */
+.par {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-rows: 1fr;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.lista {
+  margin: 0;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.lista li::marker { color: var(--accent); }
+
+.lista strong,
+.texto strong,
+.par strong { color: var(--text); font-weight: 600; }
+
+/* padding: 0 anula el padding global de section (globals.css) */
+.apartado {
+  padding: 0;
+  margin-top: 56px;
+  max-width: 860px;
+}
+
+.cabezaApartado {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  margin-bottom: 16px;
+}
+
+.cabezaApartado .h2 { margin-bottom: 0; }
+
+.h2 {
+  font-size: clamp(22px, 2.6vw, 28px);
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+  margin-bottom: 16px;
+  color: var(--text);
+}
+
+.texto {
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+/* Cómo funciona: 3 pasos numerados */
+.pasos {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.pasos li {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  min-width: 0;
+}
+
+.pasos li > span:last-child { min-width: 0; padding-top: 4px; }
+
+.numero {
+  flex: 0 0 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.acciones {
+  margin-top: 56px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.pieEnlaces {
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0 8px;
+}
+
+@media (max-width: 768px) {
+  .ficha { padding: 40px 24px 64px; }
+  .entradilla { font-size: 17px; margin-bottom: 40px; }
+  .par { grid-template-columns: minmax(0, 1fr); grid-auto-rows: auto; gap: 16px; margin-bottom: 16px; }
+  .apartado { margin-top: 44px; }
+  .acciones { margin-top: 44px; }
+}
+
+@media (prefers-reduced-motion: reduce), (prefers-reduced-transparency: reduce) {
+  .titulo { animation: none; }
+}
