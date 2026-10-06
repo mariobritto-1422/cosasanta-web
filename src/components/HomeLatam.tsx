@@ -1,6 +1,7 @@
 import { getSupabasePublic, logSupabaseError } from "@/lib/supabase";
 import RevealObserver from "@/components/RevealObserver";
-import { SHOW_PROYECTOS, SHOW_WHATSAPP } from "@/lib/site-flags";
+import { SHOW_EUROPA, SHOW_PROYECTOS, SHOW_WHATSAPP } from "@/lib/site-flags";
+import type { CSSProperties } from "react";
 
 interface BlogPost {
   id: string;
@@ -14,6 +15,26 @@ interface BlogPost {
 const WA_NUMBER = "543764745849";
 const WA_LINK = `https://wa.me/${WA_NUMBER}?text=Hola%20cosasanta%2C%20quiero%20saber%20m%C3%A1s%20sobre%20sus%20servicios`;
 const EMAIL = "cosasantaonline@gmail.com";
+
+// Botón "Cambiar de región" (solo con SHOW_EUROPA): mismo aspecto que en
+// /europa — píldora con contorno sutil, texto gris claro, 44 px de alto.
+// Estilos en línea para no tocar globals.css mientras Europa esté oculta.
+const REGION_GRUPO: CSSProperties = { display: "flex", alignItems: "center", gap: "24px" };
+const REGION_BOTON: CSSProperties = {
+  display: "inline-flex",
+  alignItems: "center",
+  minHeight: "44px",
+  padding: "0 16px",
+  border: "1px solid rgba(240, 240, 238, 0.1)",
+  borderRadius: "100px",
+  color: "#a8a8a0",
+  fontSize: "14px",
+  textDecoration: "none",
+  whiteSpace: "nowrap",
+  // Foco con teclado en verde, como en /europa (solo se ve al enfocar)
+  outlineColor: "#b8f542",
+  outlineOffset: "3px",
+};
 
 const EMOJI_MAP: Record<string, string> = {
   "Claude AI": "🧠",
@@ -101,6 +122,17 @@ export default async function HomeLatam({ logoHref = "/" }: { logoHref?: string 
     ]
   };
 
+  const menu = (
+    <ul>
+      <li><a href="#servicios">Servicios</a></li>
+      {SHOW_PROYECTOS && <li><a href="#proyectos">Proyectos</a></li>}
+      <li><a href="#proceso">Proceso</a></li>
+      <li><a href="#blog">Blog</a></li>
+      <li><a href="/autopost" className="nav-autopost">AutoPost ✨</a></li>
+      <li><a href="#contacto" className="nav-cta">Hablemos →</a></li>
+    </ul>
+  );
+
   return (
     <>
       <RevealObserver />
@@ -113,14 +145,19 @@ export default async function HomeLatam({ logoHref = "/" }: { logoHref?: string 
         <a href={logoHref} className="logo">
           cosa<span className="accent">santa</span>
         </a>
-        <ul>
-          <li><a href="#servicios">Servicios</a></li>
-          {SHOW_PROYECTOS && <li><a href="#proyectos">Proyectos</a></li>}
-          <li><a href="#proceso">Proceso</a></li>
-          <li><a href="#blog">Blog</a></li>
-          <li><a href="/autopost" className="nav-autopost">AutoPost ✨</a></li>
-          <li><a href="#contacto" className="nav-cta">Hablemos →</a></li>
-        </ul>
+        {SHOW_EUROPA ? (
+          // Con Europa visible: el menú y, a su derecha, "Cambiar de región".
+          // El botón queda fuera del <ul> para que también se vea en móvil,
+          // donde el menú se oculta.
+          <div style={REGION_GRUPO}>
+            {menu}
+            <a href="/portal" style={REGION_BOTON}>
+              Cambiar de región
+            </a>
+          </div>
+        ) : (
+          menu
+        )}
       </nav>
 
       {/* HERO */}
