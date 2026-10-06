@@ -1,6 +1,24 @@
 /* Portal (/portal) y página mínima de /europa.
    Usa las variables y tipografías de globals.css. */
 
+/* --- Colores de fondo del portal (prueba de color) ---
+   Para volver al negro anterior: poner --portal-fondo y --portal-fondo-claro
+   en #0a0a0a y --portal-grano en 0.
+   Solo aplica cuando la página tiene .lienzo (/portal); el resto del sitio
+   mantiene su fondo. html y body toman el color para que no aparezcan franjas
+   negras al hacer scroll o rebote en celular. */
+:global(html):has(.lienzo) {
+  --portal-fondo: #10120e;       /* gris profundo, abajo */
+  --portal-fondo-claro: #181b15; /* apenas más claro, arriba */
+  --portal-resplandor: rgba(184, 245, 66, 0.04); /* verde del sitio, muy tenue */
+  --portal-grano: 0.04;          /* intensidad del grano (4 %) */
+  background-color: var(--portal-fondo);
+}
+
+:global(body):has(.lienzo) {
+  background-color: var(--portal-fondo);
+}
+
 /* --- Compartido con /europa (no cambiar sin revisar esa página) --- */
 
 .portal {
@@ -29,13 +47,33 @@
 
 /* --- Portal --- */
 
+/* Contenedor propio del portal: cubre toda la pantalla */
+.lienzo {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background-color: var(--portal-fondo);
+}
+
+/* Fondo fijo: degradado vertical suave + resplandor tenue detrás de la marca */
 .fondo {
-  position: absolute;
+  position: fixed;
   inset: 0;
   z-index: 0;
+  pointer-events: none;
   background:
-    radial-gradient(ellipse 60% 50% at 50% 35%, rgba(184, 245, 66, 0.06) 0%, transparent 70%),
-    radial-gradient(ellipse 40% 40% at 20% 80%, rgba(66, 245, 200, 0.04) 0%, transparent 60%);
+    radial-gradient(ellipse 50% 40% at 50% 38%, var(--portal-resplandor) 0%, transparent 70%),
+    linear-gradient(to bottom, var(--portal-fondo-claro) 0%, var(--portal-fondo) 100%);
+}
+
+/* Grano muy fino: ruido SVG embebido, estático, no captura clics */
+.fondo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: var(--portal-grano);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+  background-size: 140px 140px;
 }
 
 .contenido {
@@ -159,4 +197,10 @@ a.boton:hover { border-color: var(--muted); }
 /* Si no entran los dos botones (2 × 164 + 12 + márgenes = 388 px): apilados, con el mismo ancho */
 @media (max-width: 387px) {
   .botones { grid-template-columns: 164px; }
+}
+
+/* Sin animaciones si el sistema pide menos movimiento o menos transparencia */
+@media (prefers-reduced-motion: reduce), (prefers-reduced-transparency: reduce) {
+  .marcaPortal { animation: none; }
+  .boton { transition: none; }
 }

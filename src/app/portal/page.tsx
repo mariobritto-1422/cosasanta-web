@@ -25,7 +25,7 @@ const SERVICIOS = ["Automatización con IA", "Marketing digital", "Merchandising
 
 export default function Portal() {
   return (
-    <main className={styles.portal}>
+    <main className={`${styles.portal} ${styles.lienzo}`}>
       <div className={styles.fondo} />
       <div className={styles.contenido}>
         <h1 className={`logo ${styles.marcaPortal}`}>
