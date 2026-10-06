@@ -9,3 +9,7 @@ export const SHOW_PROYECTOS = false;
 // Botón flotante de WhatsApp (home, /blog y artículos) y el botón
 // "WhatsApp directo" de la sección de contacto.
 export const SHOW_WHATSAPP = false;
+
+// Página /europa y la tarjeta "Europa" del portal. Con false, /europa da 404
+// y la tarjeta muestra "Próximamente" sin enlace.
+export const SHOW_EUROPA = false;
