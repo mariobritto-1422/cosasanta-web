@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
         Authorization: `Bearer ${accessToken}`,
       },
       body: JSON.stringify({
-        reason: "AutoPost Pro — cosa$anta",
+        reason: "AutoPost Pro — cosasanta",
         auto_recurring: {
           frequency: 1,
           frequency_type: "months",

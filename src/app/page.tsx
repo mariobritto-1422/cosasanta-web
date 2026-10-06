@@ -12,7 +12,7 @@ interface BlogPost {
 }
 
 const WA_NUMBER = "543764745849";
-const WA_LINK = `https://wa.me/${WA_NUMBER}?text=Hola%20CosaSanta%2C%20quiero%20saber%20m%C3%A1s%20sobre%20sus%20servicios`;
+const WA_LINK = `https://wa.me/${WA_NUMBER}?text=Hola%20cosasanta%2C%20quiero%20saber%20m%C3%A1s%20sobre%20sus%20servicios`;
 const EMAIL = "cosasantaonline@gmail.com";
 
 const EMOJI_MAP: Record<string, string> = {
@@ -83,14 +83,19 @@ export default async function Home() {
           "text": "El precio depende del proyecto. Desarrollamos desde landing pages simples hasta sistemas SaaS completos. Contactanos para una propuesta personalizada sin compromiso."
         }
       },
-      {
-        "@type": "Question",
-        "name": "¿Qué es Topaciobot?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Topaciobot es un sistema de gestión para salones de belleza desarrollado por cosasanta. Incluye agenda visual, gestión de empleados, catálogo de servicios y dashboard de comisiones. Es una PWA instalable en cualquier dispositivo."
-        }
-      }
+      // Pregunta sobre un proyecto: solo mientras se muestre la sección Proyectos
+      ...(SHOW_PROYECTOS
+        ? [
+            {
+              "@type": "Question",
+              "name": "¿Qué es Topaciobot?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Topaciobot es un sistema de gestión para salones de belleza desarrollado por cosasanta. Incluye agenda visual, gestión de empleados, catálogo de servicios y dashboard de comisiones. Es una PWA instalable en cualquier dispositivo."
+              }
+            },
+          ]
+        : []),
     ]
   };
 
