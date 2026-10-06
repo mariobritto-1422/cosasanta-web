@@ -74,8 +74,8 @@ La API `/api/autopost/usuario`:
 - Si existe y `estado='trial'` y expiró → UPDATE a `'expired'`
 - Si `estado='pro'` → pasa directo
 
-**Nota:** usa `supabaseAnon` para SELECT y `supabaseAdmin` para INSERT/UPDATE.
-Riesgo pendiente: verificar que RLS en `autopost_users` permita SELECT anon.
+**Nota:** usa `supabaseAdmin` (clave secreta) para todo. Desde 2026-10-05 `autopost_users` no tiene acceso público (RLS sin políticas para anon, sin grants).
+Migración Supabase: `autopost_users_cerrar_acceso_publico`.
 
 ---
 
@@ -216,7 +216,7 @@ OBJ_MAP = {
 
 - [ ] **Iterar frontend:** simplificar UI para mostrar solo 3 posts sin tabs de semanas
 - [ ] **Actualizar copy:** "3 posts para esta semana" en bot message y paywall
-- [ ] **Verificar RLS en `autopost_users`:** confirmar que anon key puede hacer SELECT
+- [x] **RLS en `autopost_users`:** cerrado el acceso público (2026-10-05); el SELECT va con la clave secreta
 - [ ] **Emails:** bienvenida al crear trial, recordatorio 1 día antes de expirar (Resend)
 - [ ] **Panel de admin:** trials activos, conversiones, ingresos
 - [ ] **Modo pro:** diferenciación real de funcionalidades entre trial y pro

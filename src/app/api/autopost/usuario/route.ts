@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSupabasePublic, logSupabaseError } from "@/lib/supabase";
+import { logSupabaseError } from "@/lib/supabase";
 import { getSupabaseAdmin } from "@/lib/supabase-admin";
 
 export async function POST(req: NextRequest) {
@@ -14,8 +14,9 @@ export async function POST(req: NextRequest) {
 
     const supabaseAdmin = getSupabaseAdmin();
 
-    // Buscar usuario existente
-    const { data: existing, error: errorBusqueda } = await getSupabasePublic()
+    // Buscar usuario existente. Con la clave secreta: autopost_users no admite
+    // lectura pública (RLS), para no exponer los emails registrados.
+    const { data: existing, error: errorBusqueda } = await supabaseAdmin
       .from("autopost_users")
       .select("*")
       .eq("email", emailLower)
